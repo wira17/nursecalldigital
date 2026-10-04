@@ -89,6 +89,21 @@ Informasi ini juga tersedia di dalam aplikasi melalui menu **Tentang Aplikasi**.
 - Menu **Admisi** (data `reg_periksa`) dan **Rawat Inap** (data `kamar_inap`) langsung dari Khanza.
 - Tombol **Buat Gelang** menampilkan pop-up label QR siap cetak dalam **3 ukuran** (hitam-putih untuk kertas stiker).
 
+**Code Blue**
+- Menu **Code Blue** berisi pemetaan semua kamar dari Khanza (per ruang, lengkap dengan nama pasien di kamar).
+- Klik kamar (atau isi *lokasi lain*, mis. Lobi IGD) → konfirmasi → **layar biru berkedip, sirene, dan pengumuman
+  "Code blue di …"** di **semua** nurse station & Display TV, berulang sampai ditandai **selesai**.
+- Riwayat Code Blue tersimpan (waktu, lokasi, pasien, yang mengaktifkan & menyelesaikan, durasi).
+
+**Code Red (kebakaran / asap)**
+- Menu **Code Red** memakai pemetaan kamar yang sama, ditambah *lokasi lain* (mis. Dapur Gizi, Gudang Farmasi, Ruang Panel Listrik).
+- Klik kamar / lokasi → konfirmasi → **layar merah berkedip, sirene alarm kebakaran, dan pengumuman
+  "Code red di …, tim pemadam segera ke lokasi, lakukan evakuasi sesuai prosedur"** di **semua** nurse station & Display TV.
+- Halaman Code Red menampilkan pengingat prosedur **R.A.C.E.** (Rescue, Alarm, Confine, Extinguish/Evacuate).
+- Bila Code Blue & Code Red aktif bersamaan, **Code Red didahulukan** di layar; kode lain tampil di baris "Juga aktif".
+- Di halaman Code Blue / Code Red alarm tampil sebagai bar di bawah, sehingga petugas tetap bisa mengaktifkan kode lain.
+- Code Blue & Code Red disimpan di tabel yang sama (`nc_codeblue_wira`), dibedakan kolom `kode` (`blue` / `red`).
+
 **Display TV**
 - Layar besar berisi daftar pasien per bed dan panggilan aktif, dengan pengumuman layar penuh dan suara.
 
@@ -183,7 +198,7 @@ Jika kunci AES di Khanza Anda sudah diubah, sesuaikan `KHANZA_KEY_USER` dan `KHA
 
 ## Tabel yang Ditambahkan ke Database Khanza
 
-Nurse Call hanya **menambah 5 tabel** ke database Khanza. Semuanya berawalan **`nc_`** dan berakhiran **`_wira`**,
+Nurse Call hanya **menambah 6 tabel** ke database Khanza. Semuanya berawalan **`nc_`** dan berakhiran **`_wira`**,
 sehingga mudah dikenali dan **tidak mengubah satu pun tabel Khanza**.
 
 | No | Tabel | Fungsi | Terisi saat |
@@ -193,106 +208,22 @@ sehingga mudah dikenali dan **tidak mengubah satu pun tabel Khanza**.
 | 3 | `nc_panggilan_wira` | Riwayat panggilan: keluhan, pesan, pesan suara, waktu respon, perawat | Pasien melapor lewat HP |
 | 4 | `nc_keluhan_wira` | Pilihan keluhan di HP pasien | 8 keluhan bawaan saat instalasi |
 | 5 | `nc_setting_wira` | Pengaturan aplikasi (tema, login, display TV, aturan panggilan) | Nilai bawaan saat instalasi |
+| 6 | `nc_codeblue_wira` | Riwayat alarm **Code Blue & Code Red** (kolom `kode`): lokasi/kamar, pasien, waktu aktif, siapa yang mengaktifkan & menyelesaikan | Petugas mengaktifkan Code Blue |
 
 Kolom kunci (`no_rawat`, `no_rkm_medis`, `kd_bangsal`, `kd_kamar`, `id_user`) memakai charset **latin1** seperti Khanza agar cocok saat digabung (JOIN).
 Collation-nya otomatis disamakan dengan tabel Khanza Anda. Kolom teks bebas memakai **utf8mb4** agar emoji tersimpan.
 
-### Query siap salin (copy–paste)
+### Query tambah tabel (file `database.sql`)
 
-Tabel dibuat otomatis saat aplikasi pertama dibuka. Kalau ingin membuatnya manual, buka **phpMyAdmin**, pilih **database Khanza**,
-buka tab **SQL**, lalu tempel query di bawah dan klik **Go**. Query ini aman dijalankan berulang kali.
+Semua query pembuatan tabel ada di **satu file tersendiri: `database.sql`** (folder utama aplikasi), siap copy–paste:
 
-```sql
--- =====================================================================
---  NURSE CALL DIGITAL — Tabel tambahan untuk database SIMRS Khanza
---  Jalankan di phpMyAdmin: pilih database Khanza -> tab SQL -> tempel -> Go
---  Aman dijalankan berulang kali. Tidak mengubah tabel Khanza.
--- =====================================================================
-SET NAMES utf8mb4;
+1. Buka **phpMyAdmin**, klik **database Khanza** Anda.
+2. Buka tab **SQL**.
+3. Buka `database.sql` dengan Notepad / TextEdit, **copy seluruh isinya**, tempel di kotak SQL.
+4. Klik **Go**.
 
-CREATE TABLE IF NOT EXISTS nc_user_wira (
-  id_user VARCHAR(30) CHARACTER SET latin1 NOT NULL PRIMARY KEY,
-  nama VARCHAR(100) CHARACTER SET utf8mb4 NOT NULL,
-  role ENUM('admin','user') NOT NULL DEFAULT 'user',
-  kd_bangsal CHAR(5) CHARACTER SET latin1 DEFAULT NULL,
-  no_hp VARCHAR(20) DEFAULT NULL,
-  aktif TINYINT(1) NOT NULL DEFAULT 1,
-  last_login DATETIME DEFAULT NULL,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
-
-CREATE TABLE IF NOT EXISTS nc_gelang_wira (
-  no_rawat VARCHAR(17) CHARACTER SET latin1 NOT NULL PRIMARY KEY,
-  token CHAR(24) CHARACTER SET latin1 NOT NULL UNIQUE,
-  dibuat DATETIME NOT NULL,
-  dibuat_oleh VARCHAR(30) CHARACTER SET latin1 DEFAULT NULL,
-  dicetak INT NOT NULL DEFAULT 0,
-  nonaktif DATETIME DEFAULT NULL
-) ENGINE=InnoDB;
-
-CREATE TABLE IF NOT EXISTS nc_keluhan_wira (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nama VARCHAR(60) CHARACTER SET utf8mb4 NOT NULL,
-  ikon VARCHAR(16) CHARACTER SET utf8mb4 NOT NULL DEFAULT '🔔',
-  prioritas ENUM('tinggi','sedang','rendah') NOT NULL DEFAULT 'sedang',
-  urut INT NOT NULL DEFAULT 0,
-  aktif TINYINT(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB;
-
-CREATE TABLE IF NOT EXISTS nc_panggilan_wira (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  no_rawat VARCHAR(17) CHARACTER SET latin1 NOT NULL,
-  no_rkm_medis VARCHAR(15) CHARACTER SET latin1 NOT NULL,
-  kd_bangsal CHAR(5) CHARACTER SET latin1 NOT NULL,
-  kd_kamar VARCHAR(15) CHARACTER SET latin1 NOT NULL,
-  keluhan_id INT DEFAULT NULL,
-  keluhan VARCHAR(60) CHARACTER SET utf8mb4 NOT NULL,
-  prioritas ENUM('tinggi','sedang','rendah') NOT NULL DEFAULT 'sedang',
-  pesan VARCHAR(255) CHARACTER SET utf8mb4 DEFAULT NULL,
-  audio VARCHAR(80) CHARACTER SET latin1 DEFAULT NULL,
-  durasi_audio SMALLINT DEFAULT NULL,
-  pelapor ENUM('pasien','keluarga') NOT NULL DEFAULT 'pasien',
-  status ENUM('baru','diproses','selesai') NOT NULL DEFAULT 'baru',
-  waktu DATETIME NOT NULL,
-  waktu_respon DATETIME DEFAULT NULL,
-  waktu_selesai DATETIME DEFAULT NULL,
-  perawat VARCHAR(30) CHARACTER SET latin1 DEFAULT NULL,
-  selesai_oleh VARCHAR(30) CHARACTER SET latin1 DEFAULT NULL,
-  tindakan VARCHAR(255) CHARACTER SET utf8mb4 DEFAULT NULL,
-  ip VARCHAR(45) DEFAULT NULL,
-  INDEX idx_status (status, kd_bangsal),
-  INDEX idx_waktu (waktu),
-  INDEX idx_rawat (no_rawat)
-) ENGINE=InnoDB;
-
-CREATE TABLE IF NOT EXISTS nc_setting_wira (
-  k VARCHAR(50) CHARACTER SET latin1 NOT NULL PRIMARY KEY,
-  v TEXT CHARACTER SET utf8mb4
-) ENGINE=InnoDB;
-
--- Pengaturan awal
-INSERT IGNORE INTO nc_setting_wira (k, v) VALUES
-('nama_rs', ''), ('url_publik', ''), ('jeda_lapor', '60'), ('batas_respon', '5'),
-('suara_aktif', '1'), ('suara_maks', '60'), ('tema_warna', '#3b7a67'),
-('login_bg', ''), ('login_overlay', '55'), ('login_judul', 'Nurse Call Digital'),
-('login_teks', 'Layanan cepat, pasien lebih nyaman.'),
-('display_samarkan', '0'), ('display_suara', '1'),
-('display_teks', 'Jaga kebersihan tangan · Pasien & keluarga dapat memanggil perawat dengan scan QR Code pada gelang');
-INSERT IGNORE INTO nc_setting_wira (k, v) SELECT 'display_key', SUBSTRING(SHA2(CONCAT(RAND(), NOW(), UUID()), 256), 1, 24);
-
--- Pilihan keluhan bawaan (hanya diisi jika tabel masih kosong)
-INSERT INTO nc_keluhan_wira (nama, ikon, prioritas, urut)
-SELECT * FROM (
-  SELECT 'Sakit / Nyeri' AS nama, '🤕' AS ikon, 'tinggi' AS prioritas, 1 AS urut UNION ALL
-  SELECT 'Sesak Napas', '😮‍💨', 'tinggi', 2 UNION ALL
-  SELECT 'Infus Macet / Habis', '💧', 'tinggi', 3 UNION ALL
-  SELECT 'Mual / Muntah', '🤢', 'sedang', 4 UNION ALL
-  SELECT 'Pusing', '😵', 'sedang', 5 UNION ALL
-  SELECT 'Butuh Bantuan ke Toilet', '🚻', 'rendah', 6 UNION ALL
-  SELECT 'Minta Minum / Makan', '🥤', 'rendah', 7 UNION ALL
-  SELECT 'Lainnya', '💬', 'sedang', 99
-) x WHERE NOT EXISTS (SELECT 1 FROM nc_keluhan_wira);
-```
+Atau lewat tab **Import** → pilih file `database.sql` → **Go**. Langkah ini opsional (tabel juga dibuat otomatis saat aplikasi
+pertama dibuka) dan aman dijalankan berulang kali. Di bagian akhir file ada query tambahan khusus untuk yang sudah memasang versi lama.
 
 ### 1. `nc_user_wira`
 
@@ -356,6 +287,20 @@ Indeks: `(status, kd_bangsal)`, `waktu`, `no_rawat`.
 | `urut` | INT | Urutan tampil |
 | `aktif` | TINYINT(1) | 1 = tampil di HP pasien |
 
+### 6. `nc_codeblue_wira`
+
+| Kolom | Tipe | Keterangan |
+|---|---|---|
+| `id` | INT, **PK**, auto increment | |
+| `kode` | ENUM('blue','red') | `blue` = Code Blue (henti jantung/napas), `red` = Code Red (kebakaran/asap) |
+| `kd_kamar` / `kd_bangsal` | VARCHAR(15) / CHAR(5) | Kamar & bangsal Khanza (kosong jika lokasi lain, mis. Lobi IGD) |
+| `lokasi` | VARCHAR(120) | Teks lokasi yang ditampilkan & diumumkan |
+| `no_rawat` / `pasien` | VARCHAR | Pasien di kamar tersebut saat kode diaktifkan |
+| `status` | ENUM('aktif','selesai') | Aktif = alarm berbunyi di semua nurse station & Display TV |
+| `waktu` / `oleh` | DATETIME / VARCHAR(30) | Kapan & NIK yang mengaktifkan |
+| `waktu_selesai` / `selesai_oleh` | DATETIME / VARCHAR(30) | Kapan & NIK yang menandai selesai |
+| `catatan` | VARCHAR(255) | Catatan (mis. ditutup otomatis setelah 60 menit) |
+
 ### 5. `nc_setting_wira`
 
 | Kolom | Tipe | Keterangan |
@@ -401,8 +346,8 @@ Semua pegawai yang memiliki akun **SIMRS Khanza** dapat login dengan **NIK & pas
 
 | Role | Menu |
 |---|---|
-| **Admin** | Semua menu: Dashboard, Admisi, Rawat Inap, Pengguna, Tampilan & Tema, Pengaturan, Laporan, Display TV |
-| **User** | Dashboard (nurse station: notifikasi, alarm, tangani panggilan), Admisi, Rawat Inap (lihat pasien & cetak gelang) |
+| **Admin** | Semua menu: Dashboard, Admisi, Rawat Inap, Code Blue, Code Red, Pengguna, Jenis Keluhan, Tampilan & Tema, Pengaturan, Laporan, Display TV |
+| **User** | Dashboard (nurse station: notifikasi, alarm, tangani panggilan), Admisi, Rawat Inap (lihat pasien & cetak gelang), Code Blue, Code Red |
 
 - Pegawai yang pertama kali login otomatis menjadi **User**.
 - Admin dapat mengubah role, ruang tugas, atau **menonaktifkan** akses seseorang di menu **Pengguna**.
@@ -519,6 +464,7 @@ Semua sudah diuji di Apache 2.4. Pastikan `AllowOverride All` aktif untuk folder
    GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER ON sik.nc_panggilan_wira TO 'nursecall'@'localhost';
    GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER ON sik.nc_keluhan_wira   TO 'nursecall'@'localhost';
    GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER ON sik.nc_setting_wira   TO 'nursecall'@'localhost';
+   GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER ON sik.nc_codeblue_wira  TO 'nursecall'@'localhost';
    ```
    Ganti `sik` dengan nama database Khanza Anda. Jalankan setelah tabel `_wira` dibuat, atau buat tabel lebih dulu memakai user admin.
 5. **Jangan membuka port MySQL (3306) ke internet.** Database cukup diakses dari server aplikasi.
@@ -547,23 +493,25 @@ autoindex off;
 ```
 nursecalldigital/
 ├── config.php               ← koneksi database Khanza & admin
-├── database.sql             ← tabel tambahan nc_..._wira (dipasang otomatis)
+├── database.sql             ← QUERY TAMBAH TABEL ke database Khanza (copy–paste ke phpMyAdmin)
 ├── cek.php                  ← pemeriksaan instalasi (hapus setelah selesai)
 ├── login.php  logout.php  index.php (Dashboard / Nurse Station)
 ├── admisi.php  ranap.php  pasien.php  gelang.php
 ├── panggilan.php  daftar.php  rekap.php  export.php
 ├── pengguna.php  tampilan.php  pengaturan.php  keluhan.php  ruang.php  profil.php  menu.php
 ├── tv.php (pengaturan Display TV)   display.php (layar TV)
+├── codeblue.php  codered.php  ← alarm darurat Code Blue / Code Red
 ├── lapor.php                ← halaman pasien (dibuka dari scan QR)
 ├── manifest.php  sw.js  offline.html   ← PWA
-├── api/        aksi.php · audio.php · data_tv.php · poll.php · status.php
-├── inc/        bootstrap.php · layout.php · fungsi_panggilan.php · filter_pg.php · head.php · foot.php
-├── assets/     app.css · display.css · icons/ · js/ (app, station, display, gelang-modal, rekam, qrcode)
+├── api/        aksi.php · aksi_codeblue.php · audio.php · data_tv.php · poll.php · status.php
+├── inc/        bootstrap.php · layout.php · fungsi_panggilan.php · halaman_darurat.php · filter_pg.php · head.php · foot.php
+├── assets/     app.css · display.css · icons/ · js/ (app, station, codeblue, display, gelang-modal, rekam, qrcode)
 ├── data/       data internal (penanda instalasi, cache TV, login gagal) — tertutup dari browser, harus bisa ditulis
 └── uploads/    foto latar login & uploads/suara/ (pesan suara) — harus bisa ditulis
 ```
 
 > Perhatikan dua pasang file bernama mirip: `display.php` (halaman TV, folder utama) berbeda dengan `api/data_tv.php` (data TV).
+> `codeblue.php` & `codered.php` (folder utama) sama-sama memakai `inc/halaman_darurat.php`, dan tombolnya memanggil `api/aksi_codeblue.php`.
 > Setiap file **harus** berada di folder yang benar. Jika salah folder, aplikasi menampilkan pesan "Salah folder".
 
 ---
@@ -582,6 +530,7 @@ nursecalldigital/
 | QR "Gelang sudah tidak aktif" | Pasien sudah pulang/batal. Jika dirawat lagi, klik **Buat Gelang** untuk QR baru |
 | Tombol mikrofon tidak merekam | Perekaman langsung butuh **HTTPS**; tanpa HTTPS pasien memakai aplikasi perekam HP |
 | Hasil cetak label tidak pas | Pilih ukuran kertas label yang sesuai di printer dan skala **100%** |
+| Menu Code Red tidak muncul / error kolom `kode` | Timpa semua file terbaru, lalu buka aplikasi sekali — kolom `kode` ditambahkan otomatis. Manual: `ALTER TABLE nc_codeblue_wira ADD COLUMN kode ENUM('blue','red') NOT NULL DEFAULT 'blue' AFTER id;` |
 | Tampilan tidak berubah setelah update | Muat ulang halaman (Ctrl/Cmd + Shift + R) |
 
 ---
@@ -591,7 +540,7 @@ nursecalldigital/
 Hapus folder aplikasi, lalu jalankan perintah ini di phpMyAdmin pada database Khanza (riwayat panggilan ikut terhapus):
 
 ```sql
-DROP TABLE IF EXISTS nc_panggilan_wira, nc_gelang_wira, nc_keluhan_wira, nc_user_wira, nc_setting_wira;
+DROP TABLE IF EXISTS nc_panggilan_wira, nc_gelang_wira, nc_keluhan_wira, nc_user_wira, nc_setting_wira, nc_codeblue_wira;
 ```
 
 Tabel dan data SIMRS Khanza **tidak terpengaruh**.
