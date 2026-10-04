@@ -1,0 +1,30 @@
+# ================= Nurse Call Digital — pengamanan Apache =================
+Options -Indexes
+DirectoryIndex index.php
+ServerSignature Off
+
+# File yang tidak boleh dibuka dari browser
+<FilesMatch "(^\.|\.(sql|md|log|json|bak|zip|ini|sh)$|^config\.php$)">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header unset X-Powered-By
+  <FilesMatch "^(sw\.js|manifest\.php)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+# (Opsional) paksa HTTPS bila sudah memasang sertifikat SSL — hapus tanda # di 3 baris berikut
+# RewriteEngine On
+# RewriteCond %{HTTPS} off
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]

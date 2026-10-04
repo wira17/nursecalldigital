@@ -1,0 +1,145 @@
+/* ============ DISPLAY TV (display.php) — tema terang & lembut, mengikuti warna tema aplikasi ============
+ * Dirancang untuk layar 1920×1080 dan menyesuaikan ukuran layar. Warna utama dari --pri (Tampilan & Tema).
+ */
+body.tv{
+  --tv-bg:#f3f6f5; --tv-card:#ffffff; --tv-ink:#24312d; --tv-mute:#6f7f7a; --tv-line:rgb(var(--pri-rgb) / .12);
+  --tv-red:#d9534f; --tv-red-soft:#fdeeed; --tv-red-line:#f3c4c1;
+  --tv-blue:#4a7fd4; --tv-blue-soft:#edf3fc; --tv-blue-line:#c8dbf5;
+  --tv-green:#4caf7d; --tv-shadow:0 .35em 1.2em rgb(var(--pri-rgb) / .08), 0 .08em .25em rgba(30,50,45,.05);
+  margin:0;height:100vh;overflow:hidden;color:var(--tv-ink);display:flex;flex-direction:column;cursor:default;
+  font-size:clamp(9px,min(1vw,1.78vh),80px); /* ikut lebar & tinggi layar: tampilan sama di TV HD, Full HD, 4K */
+  background:
+    radial-gradient(60em 30em at 0% 0%, rgb(var(--pri-rgb) / .10), transparent 70%),
+    radial-gradient(50em 30em at 100% 100%, rgb(var(--pri-rgb) / .08), transparent 70%),
+    var(--tv-bg);
+}
+.tv-invalid{height:100vh;display:grid;place-content:center;justify-items:center;text-align:center;gap:6px;padding:20px}
+.tv-invalid svg{background:#fff;border-radius:18px;padding:8px;box-shadow:var(--tv-shadow)}
+
+/* ---------- Header ---------- */
+.tv-top{display:flex;align-items:center;gap:1.4em;padding:.9em 1.6em;margin:.9em 1.2em 0;background:rgba(255,255,255,.85);
+  border:1px solid var(--tv-line);border-radius:1.1em;box-shadow:var(--tv-shadow);backdrop-filter:blur(6px)}
+.tv-brand{display:flex;align-items:center;gap:.85em;min-width:0;flex:1}
+.tv-logo{width:3.2em;height:3.2em;border-radius:.9em;background:var(--pri-soft);display:grid;place-items:center;flex:none}
+.tv-logo svg{width:2.3em;height:2.3em}
+.tv-brand b{display:block;font-size:1.55em;letter-spacing:.05em;line-height:1.1;color:var(--pri-2)}
+.tv-brand span{display:block;color:var(--tv-mute);font-size:1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tv-stats{display:flex;gap:.6em}
+.tv-stats div{background:var(--tv-bg);border:1px solid var(--tv-line);border-radius:.85em;padding:.45em .95em;text-align:center;min-width:5.6em}
+.tv-stats b{display:block;font-size:1.55em;line-height:1.15;font-variant-numeric:tabular-nums;color:var(--pri-2)}
+.tv-stats span{font-size:.7em;color:var(--tv-mute);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+.tv-stats .red{background:var(--tv-red-soft);border-color:var(--tv-red-line)}.tv-stats .red b{color:var(--tv-red)}
+.tv-stats .blue{background:var(--tv-blue-soft);border-color:var(--tv-blue-line)}.tv-stats .blue b{color:var(--tv-blue)}
+.tv-clock{text-align:right;flex:none;padding-left:.4em}
+.tv-clock b{display:block;font-size:2.5em;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:.02em;color:var(--tv-ink);font-weight:700}
+.tv-clock span{color:var(--tv-mute);font-size:.92em}
+
+/* ---------- Isi ---------- */
+.tv-main{flex:1;display:grid;grid-template-columns:1fr 27%;gap:1.2em;padding:1em 1.2em;min-height:0}
+.tv-beds-wrap,.tv-side{display:flex;flex-direction:column;min-height:0}
+.tv-beds-wrap{padding:0 .4em}
+.tv-sec{display:flex;align-items:center;gap:1em;margin-bottom:.75em}
+.tv-sec h2{margin:0;font-size:1.15em;text-transform:uppercase;letter-spacing:.09em;color:var(--pri-2);font-weight:800}
+.tv-legend{display:flex;align-items:center;gap:.45em;font-size:.82em;color:var(--tv-mute)}
+.tv-legend i{width:.85em;height:.85em;border-radius:50%;display:inline-block;margin-left:.7em}
+.lg-ok{background:var(--tv-green)}.lg-baru{background:#e53935;animation:tvblink 1s infinite}.lg-proses{background:var(--tv-blue)}
+.tv-page{margin-left:auto;display:flex;gap:.4em}
+.tv-page i{width:.6em;height:.6em;border-radius:99px;background:rgb(var(--pri-rgb) / .2);transition:width .3s}
+.tv-page i.on{background:var(--pri);width:1.4em}
+.tv-count{background:var(--tv-red);color:#fff;border-radius:99px;min-width:1.7em;height:1.7em;display:inline-grid;place-items:center;font-weight:800;padding:0 .4em}
+.tv-count.zero{background:var(--pri-soft);color:var(--pri-2)}
+
+/* Kartu pasien */
+.tv-beds{flex:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(15em,1fr));grid-auto-rows:9.4em;gap:.85em;align-content:start;overflow:hidden;padding:.2em}
+.bed{background:var(--tv-card);border:1px solid var(--tv-line);border-radius:1em;padding:.85em 1.05em .8em 1.25em;display:flex;flex-direction:column;
+  min-width:0;position:relative;overflow:hidden;box-shadow:var(--tv-shadow);transition:background .4s,border-color .4s}
+.bed .loc{font-size:1.25em;font-weight:800;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--pri-2)}
+.bed .nm{font-size:1.05em;font-weight:600;margin-top:.2em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bed .sub{font-size:.8em;color:var(--tv-mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:.1em}
+.bed .jk{position:absolute;top:.8em;bottom:.8em;left:0;width:.3em;border-radius:0 .3em .3em 0}
+.bed .jk.L{background:#8fbbe8}.bed .jk.P{background:#f2a9c9}
+.bed .st{margin-top:auto;font-size:.86em;font-weight:700;display:flex;align-items:center;gap:.45em;white-space:nowrap;overflow:hidden;
+  background:var(--tv-bg);border-radius:.6em;padding:.3em .6em;color:#3f7a5c}
+.bed .st .dot{width:.6em;height:.6em;border-radius:50%;background:var(--tv-green);flex:none}
+.bed.baru{background:#e53935;border-color:#c62828;color:#fff;animation:tvbaru 1s ease-in-out infinite}
+.bed.baru .loc,.bed.baru .nm{color:#fff}.bed.baru .sub{color:rgba(255,255,255,.9)}
+.bed.baru .st{background:rgba(255,255,255,.22);color:#fff}
+.bed.baru .st .dot{background:#fff;animation:tvblink .6s infinite}
+.bed.baru .timer{background:rgba(0,0,0,.22)}
+@keyframes tvbaru{0%,100%{background:#e53935;box-shadow:0 0 0 0 rgba(229,57,53,0)}50%{background:#ff7a70;box-shadow:0 0 0 .35em rgba(229,57,53,.35)}}
+.bed.diproses{background:var(--tv-blue-soft);border-color:var(--tv-blue-line)}
+.bed.diproses .loc{color:var(--tv-blue)}
+.bed.diproses .st{background:#fff;color:var(--tv-blue)}
+.bed.diproses .st .dot{background:var(--tv-blue)}
+.bed .timer{margin-left:auto;font-variant-numeric:tabular-nums;background:var(--tv-red-soft);border-radius:.4em;padding:.02em .45em}
+@keyframes tvglow{0%,100%{box-shadow:0 0 0 0 rgba(217,83,79,0)}50%{box-shadow:0 0 0 .3em rgba(217,83,79,.18)}}
+@keyframes tvblink{50%{opacity:.25}}
+
+/* Panel panggilan aktif */
+.tv-side{background:rgba(255,255,255,.85);border:1px solid var(--tv-line);border-radius:1.1em;padding:1em 1.05em;box-shadow:var(--tv-shadow)}
+.tv-calls{flex:1;overflow:hidden;display:flex;flex-direction:column;gap:.7em}
+.tv-call{border-radius:.9em;padding:.8em 1em;background:var(--tv-blue-soft);border:1px solid var(--tv-blue-line);border-left:.35em solid var(--tv-blue)}
+.tv-call.baru{background:#e53935;border-color:#c62828;border-left-color:#8e1b17;color:#fff;animation:tvbaru 1s ease-in-out infinite}
+.tv-call.baru .l,.tv-call.baru .n,.tv-call.baru .k,.tv-call.baru .f,.tv-call.baru .f b{color:#fff}
+.tv-call .l{font-size:1.25em;font-weight:800;line-height:1.15;color:var(--tv-ink)}
+.tv-call .n{font-weight:600;color:var(--tv-mute)}
+.tv-call .k{font-size:1.05em;margin-top:.3em;display:flex;gap:.4em;align-items:center;font-weight:600}
+.tv-call .f{display:flex;justify-content:space-between;gap:.5em;font-size:.85em;color:var(--tv-mute);margin-top:.35em}
+.tv-call .f b{font-variant-numeric:tabular-nums;color:var(--tv-ink)}
+.tv-call.late .f b{color:var(--tv-red)}
+.tv-empty{flex:1;display:grid;place-content:center;text-align:center;color:var(--tv-mute);gap:.3em}
+.tv-empty div{font-size:3em;opacity:.85}
+.tv-empty b{color:var(--pri-2)}
+
+/* ---------- Footer ---------- */
+.tv-foot{display:flex;align-items:center;gap:1.2em;padding:.55em 1.6em;margin:0 1.2em .8em;background:rgba(255,255,255,.85);
+  border:1px solid var(--tv-line);border-radius:.9em;font-size:.9em;color:var(--tv-mute);box-shadow:var(--tv-shadow)}
+.tv-live{display:flex;align-items:center;gap:.4em;white-space:nowrap;color:#3f7a5c;font-weight:600}
+.tv-live i{width:.6em;height:.6em;border-radius:50%;background:var(--tv-green);animation:tvblink 2s infinite}
+.tv-live.off{color:var(--tv-red)}.tv-live.off i{background:var(--tv-red);animation:none}
+.tv-marquee{flex:1;overflow:hidden;white-space:nowrap;color:var(--tv-ink);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+.tv-marquee span{display:inline-block;padding-left:100%;animation:tvscroll 30s linear infinite}
+@keyframes tvscroll{to{transform:translateX(-100%)}}
+.tv-copy{white-space:nowrap;font-size:.88em}
+.tv-copy b{color:var(--pri-2);font-weight:700}
+
+/* ---------- Pengumuman panggilan (layar penuh) ---------- */
+.tv-alert{position:fixed;inset:0;background:rgba(40,20,20,.35);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:grid;place-items:center;z-index:50}
+.tv-alert .box{text-align:center;color:var(--tv-ink);background:#fff;border-radius:1.6em;padding:2.2em 3.5em 2.4em;min-width:min(52em,90vw);
+  border-top:.5em solid var(--tv-red);box-shadow:0 1.5em 4em rgba(0,0,0,.25);animation:pop .35s ease-out, tvglowbig 2s ease-in-out infinite}
+@keyframes tvglowbig{0%,100%{box-shadow:0 1.5em 4em rgba(0,0,0,.25),0 0 0 0 rgba(217,83,79,0)}50%{box-shadow:0 1.5em 4em rgba(0,0,0,.25),0 0 0 .8em rgba(217,83,79,.22)}}
+.tv-alert .bell{display:inline-grid;place-items:center;width:7.5em;height:7.5em;border-radius:50%;background:var(--tv-red-soft);color:var(--tv-red);animation:shake 1.2s infinite}
+.tv-alert .bell svg{width:4.2em;height:4.2em}
+.tv-alert .t{font-size:1.6em;font-weight:800;letter-spacing:.14em;margin-top:.6em;color:var(--tv-red)}
+.tv-alert .loc{font-size:4.6em;font-weight:900;line-height:1.05;margin-top:.15em;color:var(--tv-ink)}
+.tv-alert .nm{font-size:2.2em;font-weight:600;margin-top:.2em;color:var(--tv-mute)}
+.tv-alert .kel{display:inline-block;font-size:2em;font-weight:700;margin-top:.6em;background:var(--tv-red-soft);color:var(--tv-red);border-radius:.6em;padding:.25em .9em}
+
+.tv-unlock{position:fixed;left:50%;bottom:4.8em;transform:translateX(-50%);z-index:60;border:0;border-radius:99px;padding:.85em 1.6em;font:inherit;font-weight:700;
+  background:#fff7df;color:#7a5a00;border:1px solid #f3dc92;cursor:pointer;box-shadow:var(--tv-shadow)}
+.tv-fs{position:fixed;right:1.6em;bottom:4.2em;z-index:40;width:2.3em;height:2.3em;border-radius:.7em;border:1px solid var(--tv-line);background:#fff;color:var(--pri-2);font-size:1em;cursor:pointer;opacity:.45}
+.tv-fs:hover{opacity:1}
+
+.tv-err{position:fixed;left:50%;top:130px;transform:translateX(-50%);width:min(900px,92vw);background:#fff4f2;color:#7a1f16;border:1px solid #f0bdb7;border-radius:14px;padding:14px 18px;z-index:60;display:grid;gap:4px;font-size:15px;box-shadow:0 10px 30px rgba(0,0,0,.15)}
+.tv-err[hidden]{display:none}.tv-err span{font-family:ui-monospace,monospace;font-size:13px;word-break:break-word}.tv-err small{opacity:.75}
+
+/* Layar tegak / sempit: tetap SATU layar tanpa scroll, panel panggilan pindah ke bawah */
+@media(max-aspect-ratio:1/1){
+  body.tv{font-size:clamp(9px,min(1.9vw,1.2vh),80px)}
+  .tv-top{flex-wrap:wrap;gap:.8em}.tv-stats{order:3;width:100%;justify-content:space-between}.tv-stats div{flex:1;min-width:0}
+  .tv-main{grid-template-columns:1fr;grid-template-rows:1fr auto}
+  .tv-side{max-height:32vh}
+  .tv-marquee{display:none}
+}
+.bed .st .tx{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.tv-call.baru.late .f b{color:#fff;background:rgba(0,0,0,.25);border-radius:.3em;padding:0 .35em}
+
+/* CODE BLUE di TV */
+.tv-cb{position:fixed;inset:0;z-index:80;display:grid;place-items:center;color:#fff;text-align:center;background:#0d3fa8;animation:tvcb 1s ease-in-out infinite}
+.tv-cb[hidden]{display:none}
+@keyframes tvcb{0%,100%{background:#0d3fa8}50%{background:#2f74ff}}
+.tv-cb-t{font-size:9em;font-weight:900;letter-spacing:.08em;line-height:1;text-shadow:0 .08em .3em rgba(0,0,0,.25)}
+.tv-cb-lok{font-size:4.4em;font-weight:800;margin-top:.3em}
+.tv-cb-ps{font-size:2em;font-weight:600;opacity:.95;margin-top:.3em}
+.tv-cb-meta{font-size:1.3em;opacity:.85;margin-top:.8em}
+.tv-cb-more{font-size:1.2em;opacity:.9;margin-top:.5em}
