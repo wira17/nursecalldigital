@@ -164,24 +164,35 @@ Dukungan & Donasi
 Pengembangan Nurse Call Digital membutuhkan waktu dan sumber daya untuk pengembangan fitur, perbaikan bug, peningkatan keamanan, dokumentasi, serta pengembangan integrasi dengan sistem rumah sakit.
 Bagi yang merasa project ini bermanfaat dan ingin mendukung pengembangannya, **donasi sangat dipersilakan**.
 
-Rekening Donasi
-BSI — Bank Syariah Indonesia
-A.n. M. Wira Satria Buana
-No. Rekening:7134197557
+## ❤️ Dukungan & Donasi
 
-Bank Jago
-A.n. M. WIRA SATRIA BUANA
-No. Rekening: 104886785030
+Setiap dukungan, sekecil apa pun, sangat berarti untuk keberlanjutan pengembangan **Nurse Call Digital**.
 
-GoPay
-No. HP: 082177846209
-Setiap dukungan, sekecil apa pun, sangat berarti untuk keberlanjutan pengembangan project ini.
+### 💳 Rekening Donasi
 
-Developer
-M. Wira Sb
-Software Engineering
-FixDigitech
-Website: https://www.fixdigitech.com
+| Metode | Informasi |
+|---|---|
+| 🏦 **BSI** | **M. Wira Satria Buana**<br>No. Rekening: **7134197557** |
+| 🏦 **Bank Jago** | **M. WIRA SATRIA BUANA**<br>No. Rekening: **104886785030** |
+| 📱 **GoPay** | No. HP: **082177846209** |
+
+> ❤️ Terima kasih atas dukungan Anda.  
+> Setiap donasi akan membantu mendukung pengembangan fitur, perbaikan sistem, keamanan, dokumentasi, dan integrasi **Nurse Call Digital**.
+
+---
+
+## 👨‍💻 Developer
+
+**M. Wira Sb**  
+Software Engineering  
+**FixDigitech**
+
+🌐 **Website:** https://www.fixdigitech.com
+
+---
+
+> 🏥 **Nurse Call Digital**  
+> *Digital Nurse Call System berbasis QR Code.*
 
 
 
