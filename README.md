@@ -18,7 +18,8 @@ Setelah QR Code dipindai, pasien akan diarahkan ke halaman Nurse Call Digital da
 Ketika pasien menekan tombol "Lapor", sistem akan mengirimkan panggilan kepada petugas/perawat dan menampilkan notifikasi pada **TV Monitor** dan **Dashboard Nurse Station**, disertai suara notifikasi.
 
 Alur Sistem
-<img width="1536" height="1024" alt="nursecall" src="https://github.com/user-attachments/assets/b828504b-abb0-4e67-94b1-12168be9c0b0" />
+
+<img width="1536" height="1024" alt="Digital Nurse Call System Infographic" src="https://github.com/user-attachments/assets/de66937e-5298-4374-a88a-e43d46b8f279" />
 
 Cara Kerja
 1. Registrasi Pasien
