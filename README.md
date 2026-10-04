@@ -17,7 +17,8 @@ Ketika pasien menekan tombol **Lapor**, sistem akan mengirimkan panggilan kepada
 
 Alur Sistem
 
-![Uploading revisi.png…]()
+<img width="1536" height="1024" alt="revisi" src="https://github.com/user-attachments/assets/ecd4d9ad-cc0e-4974-90e6-9e6543be2838" />
+
 
 Cara Kerja
 1. Registrasi Pasien
