@@ -1,6 +1,6 @@
 Nurse Call Digital
-"Nurse Call Digital** adalah aplikasi digital nurse call untuk membantu pasien menyampaikan kebutuhan atau keluhan kepada perawat secara cepat melalui "QR Code" yang terpasang pada gelang identitas pasien.
-
+"Nurse Call Digital" adalah aplikasi digital nurse call untuk membantu pasien menyampaikan kebutuhan atau keluhan kepada perawat secara cepat melalui "QR Code" yang terpasang pada gelang identitas pasien.
+<img width="1440" height="778" alt="Screen Shot 2026-10-04 at 18 50 27" src="https://github.com/user-attachments/assets/e28bf926-a4c2-4897-8c14-5a10fe7e4edf" />
 Aplikasi ini dirancang untuk **terintegrasi dengan SIMRS Khanza**, sehingga data pasien dapat digunakan dalam proses pelayanan dan pemanggilan pasien selama menjalani perawatan di rumah sakit.
 
 Konsep
@@ -16,46 +16,7 @@ Setelah QR Code dipindai, pasien akan diarahkan ke halaman Nurse Call Digital da
 Ketika pasien menekan tombol "Lapor", sistem akan mengirimkan panggilan kepada petugas/perawat dan menampilkan notifikasi pada **TV Monitor** dan **Dashboard Nurse Station**, disertai suara notifikasi.
 
 Alur Sistem
-┌──────────────────────┐
-│      SIMRS Khanza    │
-│   Data Pasien/Ranap  │
-└──────────┬───────────┘
-           │
-           ▼
-┌──────────────────────┐
-│   Nurse Call Digital │
-│   Cetak Gelang QR    │
-└──────────┬───────────┘
-           │
-           ▼
-┌──────────────────────┐
-│     GELANG PASIEN    │
-│       QR CODE        │
-└──────────┬───────────┘
-           │
-           │ Scan QR Code
-           ▼
-┌──────────────────────┐
-│   Smartphone Pasien  │
-│                      │
-│  Pilih Keluhan /     │
-│  Kebutuhan Pasien    │
-└──────────┬───────────┘
-           │
-           │ Klik "LAPOR"
-           ▼
-┌──────────────────────┐
-│   Nurse Call Server  │
-└──────────┬───────────┘
-           │
-       ┌───┴────────────┐
-       ▼                ▼
-┌──────────────┐  ┌─────────────────┐
-│  TV Monitor  │  │ Nurse Station   │
-│              │  │   Dashboard     │
-│ 🔔 NOTIFIKASI│  │ 🔔 NOTIFIKASI   │
-│    SUARA     │  │    SUARA        │
-└──────────────┘  └─────────────────┘
+<img width="1536" height="1024" alt="nursecall" src="https://github.com/user-attachments/assets/b828504b-abb0-4e67-94b1-12168be9c0b0" />
 
 Cara Kerja
 1. Registrasi Pasien
@@ -72,69 +33,48 @@ Data pasien yang diperlukan dapat meliputi:
 2. Cetak Gelang Pasien
 Pada saat proses pelayanan, sistem Nurse Call Digital dapat digunakan untuk mencetak gelang pasien yang dilengkapi dengan **QR Code unik".
 QR Code tersebut menjadi identitas digital untuk menghubungkan pasien dengan data perawatan yang sesuai.
+<img width="1440" height="777" alt="Screen Shot 2026-10-04 at 18 51 52" src="https://github.com/user-attachments/assets/cfcba051-afd0-4977-bddb-fbb4a391aa4e" />
 
 3. Pasien Melakukan Scan
-Ketika pasien membutuhkan bantuan perawat, pasien cukup:
-"Scan QR Code → Buka Nurse Call Digital"
+Ketika pasien membutuhkan bantuan perawat, pasien/keluara pasien cukup:
+"Scan QR Code yang ada di Gelang Pasien→ Buka Nurse Call Digital"
+<img width="591" height="1280" alt="HP1" src="https://github.com/user-attachments/assets/d0b7b90e-7e03-4526-a30b-fc64f966d5f2" />
 Tidak diperlukan telepon atau komunikasi suara melalui aplikasi.
 
-4. Pilih Keluhan / Kebutuhan
+5. Pilih Keluhan / Kebutuhan
 Setelah QR Code dipindai, pasien akan melihat pilihan kebutuhan atau keluhan.
 Contoh:
-- 🔔 Panggil Perawat
-- 💊 Meminta Obat
-- 🛏️ Membutuhkan Bantuan
-- 🚿 Membutuhkan Bantuan ke Toilet
-- 🍽️ Permintaan Makan
-- 😣 Keluhan Nyeri
-- 💧 Membutuhkan Air Minum
-- ⚠️ Kondisi Darurat
-Keluhan Lainnya
+<img width="591" height="1280" alt="HP2" src="https://github.com/user-attachments/assets/1a4e386c-f821-4fb6-8399-362ce7e09138" />
 Pilihan keluhan dapat disesuaikan dengan kebutuhan masing-masing rumah sakit.
 
 5. Klik "Lapor"
 Setelah memilih kebutuhan, pasien menekan tombol:
 "LAPOR"
+<img width="1440" height="779" alt="Screen Shot 2026-10-04 at 18 58 50" src="https://github.com/user-attachments/assets/59a113fb-0b6f-40b5-81b5-7194ada15664" />
 Sistem kemudian membuat data pemanggilan dan mengirimkan notifikasi ke Nurse Station.
 
-6. Notifikasi Nurse Station
+7. Notifikasi Nurse Station
 Pada Dashboard Nurse Station akan muncul:
-- Nama pasien
-- Ruang
-- Nomor Bed
-- Jenis keluhan
-- Waktu pemanggilan
-- Status panggilan
+<img width="1440" height="779" alt="Screen Shot 2026-10-04 at 18 58 50" src="https://github.com/user-attachments/assets/3bb70820-8ae4-4a82-983c-123dffd856c4" />
+
+<img width="1440" height="778" alt="Screen Shot 2026-10-04 at 18 58 59" src="https://github.com/user-attachments/assets/aab6a112-fd66-4b5c-b4a2-d662328f591a" />
+
+<img width="1440" height="781" alt="Screen Shot 2026-10-04 at 18 59 19" src="https://github.com/user-attachments/assets/660aee7a-2ced-4acb-9c88-6c0d0e8e51f2" />
+
 Dashboard juga memberikan **notifikasi suara** agar petugas segera mengetahui adanya panggilan baru.
 
 7. TV Monitor
 Panggilan juga dapat ditampilkan pada **TV Monitor Nurse Station**.
 Contoh tampilan:
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-         🔔 NURSE CALL
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<img width="1440" height="781" alt="Screen Shot 2026-10-04 at 18 59 19" src="https://github.com/user-attachments/assets/4cc56d7a-1362-495d-bcb2-688d91faba55" />
 
-    PASIEN MEMBUTUHKAN BANTUAN
+<img width="1437" height="778" alt="Screen Shot 2026-10-04 at 18 51 24" src="https://github.com/user-attachments/assets/2fa8dd8d-afdc-4cc6-84a4-534a4fb585d7" />
 
-Nama     : M Wira Satria Buana
-Ruang    : Mawar
-Bed      : 03
-Keluhan  : Meminta Bantuan
-Waktu    : 14:32
-
-       ⚠️ PANGGILAN BARU
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<img width="1440" height="779" alt="Screen Shot 2026-10-04 at 18 51 36" src="https://github.com/user-attachments/assets/b66d60df-f1e8-4f00-992b-a1cbbe1ce187" />
 
 Petugas kemudian dapat menangani panggilan dan mengubah statusnya menjadi:
-BARU
-  ↓
-DITERIMA
-  ↓
-DALAM PENANGANAN
-  ↓
-SELESAI
+BARU - DITERIMA - DALAM PENANGANAN - SELESAI
 
 Integrasi SIMRS Khanza
 Nurse Call Digital dirancang untuk dapat terintegrasi dengan **SIMRS Khanza**.
@@ -248,7 +188,7 @@ A.n. M. WIRA SATRIA BUANA
 No. Rekening: 104886785030
 
 GoPay
-No. HP: 08217784629
+No. HP: 082177846209
 
 "Terima kasih atas dukungan Anda"
 Setiap dukungan, sekecil apa pun, sangat berarti untuk keberlanjutan pengembangan project ini.
